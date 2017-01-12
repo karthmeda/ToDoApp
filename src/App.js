@@ -35,7 +35,8 @@ class App extends Component {
       let newTodoId = response.data.name;
       todos[newTodoId] = newTodo;
       this.setState({ todos: todos });
-    }).catch((error) => {
+    })
+    .catch((error) => {
       console.log(error);
     });
   }
@@ -77,7 +78,7 @@ class App extends Component {
 
       todoElements.push(
         <div className="todo d-flex justify-content-between pb-4" key={todoId}>
-          <div className="mt-2">
+          <div className="mt-2" onClick={ () => this.selectTodo(todoId)}>
             <h4>{todo.title}</h4>
             <div>{moment(todo.createdAt).calendar()}</div>
           </div>
@@ -98,6 +99,25 @@ class App extends Component {
     );
   }
 
+  selectTodo(todoId) {
+    this.setState({ currentTodo: todoId });
+  }
+
+  renderSelectedTodo() {
+   let content;
+
+   if (this.state.currentTodo) {
+     let currentTodo = this.state.todos[this.state.currentTodo];
+     content =  (
+       <div>
+         <h1>{currentTodo.title}</h1>
+       </div>
+     );
+   }
+
+   return content;
+ }
+
   render() {
   return (
     <div className="App container-fluid">
@@ -106,6 +126,9 @@ class App extends Component {
           {this.renderNewTodoBox()}
           {this.renderTodoList()}
         </div>
+        <div className="col-6 px-4">
+            {this.renderSelectedTodo()}
+          </div>
       </div>
     </div>
   );
